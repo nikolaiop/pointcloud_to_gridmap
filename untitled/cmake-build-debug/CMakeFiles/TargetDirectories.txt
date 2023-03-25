@@ -1,0 +1,3 @@
+/home/nikolai/CLionProjects/untitled/cmake-build-debug/CMakeFiles/pcd_write_test.dir
+/home/nikolai/CLionProjects/untitled/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/nikolai/CLionProjects/untitled/cmake-build-debug/CMakeFiles/rebuild_cache.dir
