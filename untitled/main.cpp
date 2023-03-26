@@ -19,6 +19,8 @@ std::tuple<int, int> GetCell(double pos_x, double pos_y, double resolution, int 
         x_out = round(pos_x/resolution + col/4.5) -1;
     if (std::abs(pos_y) > resolution)
         y_out = round(pos_y/resolution + row/2.5) - 1;
+    if(x_out < 0 || y_out < 0)
+        return {0,0};
     return {x_out, y_out};
 
 }
@@ -35,13 +37,13 @@ int main() {
     int size_x = 2000;
     int size_y = 2000;
 
-    //bool **test = new bool*[size_y];
-    //for (int row = 0; row < size_y; ++row) {
-      //  test[row] = new bool[size_x];
-    //}
+    bool **test = new bool*[size_y];
+    for (int row = 0; row < size_y; ++row) {
+      test[row] = new bool[size_x];
+    }
 
-    double resolution = 0.34;
-    bool test[size_x][size_y];
+    double resolution = 0.1;
+    //bool test[size_x][size_y];
     for (int row = 0; row < size_y; ++row) {
         for (int col = 0; col < size_x; ++col) {
             test[row][col] = false;
@@ -68,8 +70,7 @@ int main() {
     }
     for (int row = 0; row < size_y; ++row) {
         for (int col = 0; col < size_x; ++col) {
-            if(test[row][col])
-                std::cout<<row<<std::endl<<col<<std::endl;
+                //std::cout<<row<<std::endl<<col<<std::endl;
         }
     }
     sockaddr_in addr;
@@ -83,18 +84,18 @@ int main() {
         return 1;
     }
 
-
-
     // Accept connection
     int connfd = accept(sock, NULL, NULL);
-    //bool *buffer = new bool[size_x*size_y];
-    bool buffer[size_x*size_y];
-    memcpy(buffer, test,sizeof(bool)*size_x*size_y);
-    send(sock, buffer, sizeof(bool) * size_x * size_y, 0);
-    //for (int i = 0; i < size_y; i++) {
-      //  delete[] test[i]; // free memory for each row
-   // }
-    //delete[] test;        // free memory for the array of pointers
-    //delete[] buffer;
+    bool *buffer = new bool[size_x*size_y];
+    for (int i = 0; i <size_y ; ++i) {
+        memcpy(&buffer[i*size_y], test[i], size_y*sizeof(bool));
+    }
+    //bool buffer[size_x*size_y];
+    send(sock, buffer,  size_x * size_y,   0);
+    for (int i = 0; i < size_y; i++) {
+        delete[] test[i]; // free memory for each row
+    }
+    delete[] test;        // free memory for the array of pointers
+    delete[] buffer;
     return 0;
 }
